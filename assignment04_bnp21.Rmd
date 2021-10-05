@@ -1,0 +1,18 @@
+---
+title: "Assignment04"
+author: "Bria Pullin"
+date: "10/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{Setup, echo = TRUE}
+git commit
+git commit -m "Creating and clearly formatting the document"
+##**National Material Capabilities Data**
+__** Bria Pullin **__
+
+
+```
