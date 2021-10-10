@@ -65,7 +65,7 @@ MNC_Big_Three %>%
 # Here we are looking at the count of military personel from each year between 1914 and 2016 for three of the largest modern military powers. Looking right around the 1940s we can see a very large spike in military personel for the United States and Russia, predictably due to the onset of World War II. Troop numbers across all three countries decreased steadily as we progressed into the 2000s where numbers remain relatively flat. 
 ```{r Data Visualization 3, echo = TRUE}
 #lets compare USA, Russian, and Chinese troops, Country codes are as follows#
-MNC_Big_three %>% 
+MNC_Big_Three %>% 
 filter(stateabb %in% c("USA", "RUS", "CHN")) %>%
   mutate(stateabb = factor(stateabb, levels = c("USA", "RUS", "CHN"))) %>%
   ggplot(aes(year, milper, color = stateabb)) +
