@@ -44,8 +44,8 @@ MNC_1914 %>%
 # This subsetted strip chart is used to help us visualize the national capability index scores held by the United States, Russia, and China from 194 to 2016. The Composite Index of National Capabilities is described as aggregatting six individual measured components of national material capabilities into a single value per year. The index scores range between 0 and 1, with scores closer to 1 indicating a state holding a higher level of capabilities in a given year. By utilizing this vizualization, we can see that the United States frequently received higher scores in capability than both Russia and China. 
 ```{r Data Visualization 2, echo = TRUE}
 #drop observations before 1914, milex prior to that is in thousands of british pounds#
-MNC_Big_three <- filter(MNC_60, ccode %in% c(2, 365, 710) & year >= 1914)   
-MNC_Big_three %>%
+MNC_Big_Three <- filter(MNC_60, ccode %in% c(2, 365, 710) & year >= 1914)   
+MNC_Big_Three %>%
     filter(year >= 1914) %>% 
     filter(!is.na(cinc)) %>%
     mutate(stateabb = fct_recode(stateabb, 
