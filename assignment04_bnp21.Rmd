@@ -83,7 +83,7 @@ MNC_Big_three %>%
   geom_col() +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(title = "Military Expenditure in 2016" ,x = "Country", y = "Military Expenditure") +
-  coord_flip()
+  coord_flip() 
 
 ```
 
