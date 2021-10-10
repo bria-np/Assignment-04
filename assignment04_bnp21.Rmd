@@ -2,17 +2,88 @@
 title: "Assignment04"
 author: "Bria Pullin"
 date: "10/5/2021"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r Setup, echo = TRUE, error=TRUE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readr)
+NMC_60_abridged <- read_csv("data/NMC_Documentation 6/NMC-60-abridged/NMC-60-abridged.csv")
+View(NMC_60_abridged)
+MNC_60 <- as_tibble(NMC_60_abridged)
 ```
-```{Setup, echo = TRUE}
-git commit
-git commit -m "Creating and clearly formatting the document"
-##**National Material Capabilities Data**
-__** Bria Pullin **__
+##** National Material Capabilities Data 
 
+#__** https://correlatesofwar.org/data-sets/national-material-capabilities 
+# Data Visualizations 
+ 
+```{r Data Visualization 1, echo = TRUE}
+#North American Steel and Iron Production 
+US_MNC <- filter(MNC_60, stateabb == "USA" & year >= 1919)
+MNC_1914 <- filter(MNC_60, year >= 1914)
+MNC_1914 %>% 
+  filter(stateabb %in% c("USA","CAN","MEX")) %>%
+  group_by(stateabb, year) %>%
+  summarize(irst = sum(irst)) %>%
+  ggplot(aes(x = year, y = irst, fill = stateabb)) +
+  geom_area(position = "stack") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0)),
+                     limits = c(2000, 2016),
+                     breaks = 2000 + 0:15) +  
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), 
+                     labels = scales::comma) +
+  labs(x = "Year",
+       y = "Iron and Steel Production (Thousands of Tons)")
+```
+
+##** Distirbution Composite Index of National Capability
+# This subsetted strip chart is used to help us visualize the national capability index scores held by the United States, Russia, and China from 194 to 2016. The Composite Index of National Capabilities is described as aggregatting six individual measured components of national material capabilities into a single value per year. The index scores range between 0 and 1, with scores closer to 1 indicating a state holding a higher level of capabilities in a given year. By utilizing this vizualization, we can see that the United States frequently received higher scores in capability than both Russia and China. 
+```{r Data Visualization 2, echo = TRUE}
+#drop observations before 1914, milex prior to that is in thousands of british pounds#
+MNC_Big_three <- filter(MNC_60, ccode %in% c(2, 365, 710) & year >= 1914)   
+MNC_Big_three %>%
+    filter(year >= 1914) %>% 
+    filter(!is.na(cinc)) %>%
+    mutate(stateabb = fct_recode(stateabb, 
+                            "United States" = "USA",
+                            "Russia" = "RUS", 
+                            "China" = "CHN", 
+                            )) %>%
+  ggplot(aes(x = cinc, y = stateabb)) +
+  geom_point(alpha = 0.2, size = 5) +
+  labs(title = "Composite Index of National Capability",
+       x = "Composite National Capability Score",
+       y = NULL) +
+  theme(axis.ticks.y = element_blank())
+```
+## Military Personel in the United States, Russia, and China 
+
+# Here we are looking at the count of military personel from each year between 1914 and 2016 for three of the largest modern military powers. Looking right around the 1940s we can see a very large spike in military personel for the United States and Russia, predictably due to the onset of World War II. Troop numbers across all three countries decreased steadily as we progressed into the 2000s where numbers remain relatively flat. 
+```{r Data Visualization 3, echo = TRUE}
+#lets compare USA, Russian, and Chinese troops, Country codes are as follows#
+MNC_Big_three %>% 
+filter(stateabb %in% c("USA", "RUS", "CHN")) %>%
+  mutate(stateabb = factor(stateabb, levels = c("USA", "RUS", "CHN"))) %>%
+  ggplot(aes(year, milper, color = stateabb)) +
+  geom_line() +
+  geom_area(fill = "grey") +
+  labs(title = "Military Personel from 1914 to 2016" ,x = "Year",
+       y = "Military Personel (Thousands)")
+```
+# Looking at the most recent data available in this set, 2016, we see that amongst the three 
+```{r Data Visualization 4, echo = TRUE}
+MNC_Big_three %>% 
+  filter(year == 2016) %>% 
+  group_by(stateabb) %>% 
+  ggplot(aes(stateabb, milex, fill = stateabb)) +
+  geom_col() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(title = "Military Expenditure in 2016" ,x = "Country", y = "Military Expenditure") +
+  coord_flip()
 
 ```
+
